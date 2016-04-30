@@ -1,0 +1,17 @@
+<h1> List all quotes </h1>
+
+<ul>
+  {{#each model as |quote|}}
+    <li>
+      {{#link-to 'stockQuote' quote}}
+        <b>{{quote.tradeDate}} :</b>
+        - Open: {{quote.openValue}}
+        - Close: {{quote.closeValue}}
+        - High: {{quote.highValue}}
+        - Low: {{quote.lowValue}}
+        - Volume: {{quote.volume}}
+      {{/link-to}}
+    </li>
+  {{/each}}
+</ul>
+
