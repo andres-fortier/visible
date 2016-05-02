@@ -2,7 +2,7 @@ class StockQuotesController < ApplicationController
   before_action :set_stock_quote, only: [:show, :update, :destroy]
 
   def index
-    render json: {stock_quotes: StockQuote.all}
+    render json: {stock_quotes: StockQuote.all.order('trade_date ASC')}
   end
 
   def show
