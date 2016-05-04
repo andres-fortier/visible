@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+
+  /* Chart */
   chartMode: 'StockChart',
 
   chartOptions: {
@@ -13,18 +15,33 @@ export default Ember.Controller.extend({
   },
 
   chartData: function() {
-    var data = this.model.map(function(item) {
-      return [item.get('tradeDate').getTime(), parseFloat(item.get('openValue'))];
-    });
+    return this.series;
+  }.property("buildChartData"),
 
-    return [{
-    name : 'YHOO',
-    data : data,
-    tooltip: {
-        valueDecimals: 3
-      }
-    }];
-  }.property('model.@each.openValue'),
+  chartSeries: [
+    {name: 'Open', property: 'openValue', visible: true},
+    {name: 'Close', property: 'closeValue', visible: true},
+    {name: 'High', property: 'highValue', visible: false},
+    {name: 'Low', property: 'lowValue', visible: false}
+  ],
+
+  buildChartData: function() {
+    var self = this;
+    console.log(this.get('model'));
+    this.series = this.chartSeries.map(function(badName) {
+      var data = self.get('model').map(function(item) {
+        return [item.get('tradeDate').getTime(), parseFloat(item.get(badName.property))];
+      });
+      return {
+        name: badName.name,
+        data: data,
+        visible: badName.visible,
+        tooltip: {
+          valueDecimals: 3
+        }
+      };
+    });
+  }.observes("model"),
 
   tableData: function() {
     return this.model;
@@ -64,6 +81,15 @@ export default Ember.Controller.extend({
     changeValue: function(stockQuote, newValue) {
       stockQuote.set('openValue', parseFloat(newValue));
       stockQuote.save();
+    },
+    toggleShowClose: function(seriesIndex) {
+      var isVisible = this.chartSeries[seriesIndex].visible = !this.chartSeries[seriesIndex].visible;
+      var series = Highcharts.charts[0].series[seriesIndex];
+      if (isVisible) {
+        series.show();
+      } else {
+        series.hide();
+      }
     }
   }
 
