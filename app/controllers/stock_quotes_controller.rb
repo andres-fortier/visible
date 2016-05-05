@@ -2,18 +2,18 @@ class StockQuotesController < ApplicationController
   before_action :set_stock_quote, only: [:show, :update, :destroy]
 
   def index
-    render json: {stock_quotes: StockQuote.all.order('trade_date ASC')}
+    render json: StockQuote.all.order('trade_date ASC')
   end
 
   def show
-    render json: {stock_quote: @stock_quote}
+    render json: @stock_quote
   end
 
   def create
     @stock_quote = StockQuote.new(stock_quote_params)
 
     if @stock_quote.save
-      render json: {stock_quote: @stock_quote}, status: :created, location: @stock_quote
+      render json: @stock_quote, status: :created, location: @stock_quote
     else
       render json: @stock_quote.errors, status: :unprocessable_entity
     end
