@@ -27,15 +27,14 @@ export default Ember.Controller.extend({
 
   buildChartData: function() {
     var self = this;
-    console.log(this.get('model'));
-    this.series = this.chartSeries.map(function(badName) {
+    this.series = this.chartSeries.map(function(series) {
       var data = self.get('model').map(function(item) {
-        return [item.get('tradeDate').getTime(), parseFloat(item.get(badName.property))];
+        return [item.get('tradeDate').getTime(), parseFloat(item.get(series.property))];
       });
       return {
-        name: badName.name,
+        name: series.name,
         data: data,
-        visible: badName.visible,
+        visible: series.visible,
         tooltip: {
           valueDecimals: 3
         }
@@ -82,14 +81,17 @@ export default Ember.Controller.extend({
       stockQuote.set('openValue', parseFloat(newValue));
       stockQuote.save();
     },
-    toggleShowClose: function(seriesIndex) {
-      var isVisible = this.chartSeries[seriesIndex].visible = !this.chartSeries[seriesIndex].visible;
-      var series = Highcharts.charts[0].series[seriesIndex];
-      if (isVisible) {
-        series.show();
-      } else {
-        series.hide();
-      }
+    // Not super happy about this. I think the proper way should be
+    // to have an observer on the boolean flag and let that trigger
+    // the show/hide.
+    showSeries: function(seriesIndex, event) {
+      var isVisible = event.target.checked;
+      Ember.set(this.chartSeries[seriesIndex], 'visible', isVisible);
+      // There must be a better way of doing this from the library itself
+      // instead of using jQuery
+      var chart = Ember.$('.highcharts-wrapper').highcharts();
+      var series = chart.series[seriesIndex];
+      series.setVisible(isVisible);
     }
   }
 

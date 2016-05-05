@@ -5,9 +5,8 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <!-- {{input type="checkbox" checked=showClose}} Show close -->
             {{#each chartSeries as |series index|}}
-              <button {{action "toggleShowClose" index}}>Toggle {{series.name}}</button>
+              <input type="checkbox" checked={{series.visible}} onclick={{action "showSeries" index}} /> {{series.name}}
             {{/each}}
           </div>
         </div>
