@@ -1,5 +1,6 @@
 class StockQuotesController < ApplicationController
   before_action :set_stock_quote, only: [:show, :update, :destroy]
+  rescue_from ActiveRecord::RecordNotFound, with: :show_not_found_errors
 
   def index
     render json: StockQuote.all.order('trade_date ASC')
@@ -41,4 +42,9 @@ class StockQuotesController < ApplicationController
     def stock_quote_params
       params.require(:stock_quote).permit(:trade_date, :open_value, :close_value, :high_value, :low_value, :volume)
     end
+
+    def show_not_found_errors(exception)
+      render json: {error: "Stock not found"}, status: :not_found
+    end
+
 end
