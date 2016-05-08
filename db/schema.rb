@@ -11,10 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160430132614) do
+ActiveRecord::Schema.define(version: 20160430131332) do
 
   create_table "stock_quotes", force: :cascade do |t|
-    t.date     "trade_date"
+    t.datetime "trade_date"
     t.decimal  "open_value",  precision: 15, scale: 10
     t.decimal  "close_value", precision: 15, scale: 10
     t.decimal  "high_value",  precision: 15, scale: 10
