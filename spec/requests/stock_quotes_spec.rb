@@ -2,10 +2,13 @@ require 'rails_helper'
 
 # TODO: missing test for delete and update
 
-describe StockQuotesController, type: :controller do
-  render_views
+describe 'StockQuote API' do
 
   let(:json) { JSON.parse(response.body) }
+
+  let(:json_headers) do
+    {"CONTENT_TYPE" => "application/json"}
+  end
 
   let(:stock_quotes) do [
     StockQuote.new(
@@ -32,30 +35,30 @@ describe StockQuotesController, type: :controller do
   describe "GET stock_quotes" do
 
     it "returns ok response" do
-      get :index
+      get '/stock_quotes'
       expect(response).to have_http_status(:ok)
     end
 
     it "returns a json content type" do
-      get :index
+      get '/stock_quotes'
       expect(response.content_type).to eq "application/json"
     end
 
     it "returns an empty json if no records are defined" do
-      get :index
+      get '/stock_quotes'
       expect(json['stock_quotes']).to be_empty
     end
 
     it "returns all the stock quotes" do
       stock_quotes.each &:save!;
-      get :index
+      get '/stock_quotes'
       expect(json['stock_quotes']).to match_array(stock_quotes_json)
     end
 
     it "returns the stock quotes sorted by date ascending" do
       stock_quotes.each &:save!;
       sorted_stock_quotes_json = [stock_quotes_json[1], stock_quotes_json[0]];
-      get :index
+      get '/stock_quotes'
       expect(json['stock_quotes']).to eq(sorted_stock_quotes_json)
     end
   end
@@ -66,19 +69,19 @@ describe StockQuotesController, type: :controller do
 
     it "returns ok response for existing records" do
       stock_quote.save!
-      get :show, id: stock_quote.id
+      get "/stock_quotes/#{stock_quote.id}"
       expect(response).to have_http_status(:ok)
     end
 
     it "returns no_found response for non-existing records" do
-      get :show, id: 23
+      get "/stock_quotes/23"
       expect(response).to have_http_status(:not_found)
     end
 
     it "returns the requested stock quote data" do
       stock_quote.save!
       raw_json = StockQuoteSerializer.new(stock_quote).to_json
-      get :show, id: stock_quote.id
+      get "/stock_quotes/#{stock_quote.id}"
       expect(response.body).to eq(raw_json)
     end
 
@@ -89,25 +92,27 @@ describe StockQuotesController, type: :controller do
     # TODO: Test proper validation and errors
 
     let (:stock_quote_params) do {
+      "stock_quote" => {
         "trade_date" => '2016-03-12',
         "open_value" => 12.0,
         "close_value" => 11.5,
         "high_value" => 15.6,
         "low_value" => 8.3,
         "volume" => 5678
+        }
       }
     end
 
     it "returns the appropriate status" do
-      post :create, stock_quote: stock_quote_params
+      post '/stock_quotes', stock_quote_params.to_json, json_headers
       expect(response).to have_http_status(:created)
     end
 
     it "creates the record in the DB" do
-      post :create, stock_quote: stock_quote_params
+      post '/stock_quotes', stock_quote_params.to_json, json_headers
       new_record_hash = JSON.parse(StockQuoteSerializer.new(StockQuote.first).to_json)
-      stock_quote_params['id'] = 1;
-      expect(new_record_hash['stock_quote']).to eq(stock_quote_params)
+      new_record_hash['stock_quote'].delete('id')
+      expect(new_record_hash).to eq(stock_quote_params)
     end
   end
 
