@@ -35,30 +35,30 @@ describe 'StockQuote API' do
   describe "GET stock_quotes" do
 
     it "returns ok response" do
-      get '/stock_quotes'
+      get '/api/v1/stock_quotes'
       expect(response).to have_http_status(:ok)
     end
 
     it "returns a json content type" do
-      get '/stock_quotes'
+      get '/api/v1/stock_quotes'
       expect(response.content_type).to eq "application/json"
     end
 
     it "returns an empty json if no records are defined" do
-      get '/stock_quotes'
+      get '/api/v1/stock_quotes'
       expect(json['stock_quotes']).to be_empty
     end
 
     it "returns all the stock quotes" do
       stock_quotes.each &:save!;
-      get '/stock_quotes'
+      get '/api/v1/stock_quotes'
       expect(json['stock_quotes']).to match_array(stock_quotes_json)
     end
 
     it "returns the stock quotes sorted by date ascending" do
       stock_quotes.each &:save!;
       sorted_stock_quotes_json = [stock_quotes_json[1], stock_quotes_json[0]];
-      get '/stock_quotes'
+      get '/api/v1/stock_quotes'
       expect(json['stock_quotes']).to eq(sorted_stock_quotes_json)
     end
   end
@@ -69,19 +69,19 @@ describe 'StockQuote API' do
 
     it "returns ok response for existing records" do
       stock_quote.save!
-      get "/stock_quotes/#{stock_quote.id}"
+      get "/api/v1/stock_quotes/#{stock_quote.id}"
       expect(response).to have_http_status(:ok)
     end
 
     it "returns no_found response for non-existing records" do
-      get "/stock_quotes/23"
+      get "/api/v1/stock_quotes/23"
       expect(response).to have_http_status(:not_found)
     end
 
     it "returns the requested stock quote data" do
       stock_quote.save!
       raw_json = StockQuoteSerializer.new(stock_quote).to_json
-      get "/stock_quotes/#{stock_quote.id}"
+      get "/api/v1/stock_quotes/#{stock_quote.id}"
       expect(response.body).to eq(raw_json)
     end
 
@@ -104,12 +104,12 @@ describe 'StockQuote API' do
     end
 
     it "returns the appropriate status" do
-      post '/stock_quotes', stock_quote_params.to_json, json_headers
+      post '/api/v1/stock_quotes', stock_quote_params.to_json, json_headers
       expect(response).to have_http_status(:created)
     end
 
     it "creates the record in the DB" do
-      post '/stock_quotes', stock_quote_params.to_json, json_headers
+      post '/api/v1/stock_quotes', stock_quote_params.to_json, json_headers
       new_record_hash = JSON.parse(StockQuoteSerializer.new(StockQuote.first).to_json)
       new_record_hash['stock_quote'].delete('id')
       expect(new_record_hash).to eq(stock_quote_params)
