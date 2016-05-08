@@ -36,10 +36,18 @@ export default Ember.Controller.extend({
     {name: 'Low', property: 'lowValue', visible: false}
   ],
 
+  sortedModel: Ember.computed.sort('model', function(model1, model2) {
+    if (model1.get('tradeDate') < model2.get('tradeDate')) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }),
+
   chartData: function() {
     return this.get('chartSeries').map((series) => {
-      var data = this.get('model').map((item) => {
-        return [item.get('tradeDate').getTime(), item.get(series.property)];
+      var data = this.get('sortedModel').map((item) => {
+        return [item.get('tradeDate').valueOf(), item.get(series.property)];
       });
       return {
         name: series.name,
@@ -54,11 +62,11 @@ export default Ember.Controller.extend({
 
   tableData: function() {
     if (!this.get('dateRangeFilter')) {
-      return this.model;
+      return this.get('sortedModel');
     } else {
       var from = this.get('dateRangeFilter').fromDate;
       var to = this.get('dateRangeFilter').toDate;
-      return this.model.filter((stockQuote) => {
+      return this.get('sortedModel').filter((stockQuote) => {
         var quoteDate = stockQuote.get('tradeDate');
         return (from <= quoteDate) && (quoteDate <= to);
       });

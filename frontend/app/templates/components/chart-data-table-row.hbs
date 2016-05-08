@@ -20,7 +20,7 @@
     </div>
   </td>
 {{else}}
-  <td>{{stockQuote.tradeDate}}</td>
+  <td>{{moment-format stockQuote.tradeDate 'MM/DD/YYYY'}}</td>
   <td>{{stockQuote.openValue}}</td>
   <td>{{stockQuote.closeValue}}</td>
   <td>{{stockQuote.highValue}}</td>

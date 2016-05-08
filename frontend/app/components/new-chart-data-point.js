@@ -38,7 +38,7 @@ export default Ember.Component.extend({
     },
   },
 
-  _cleanupForm: function(argument) {
+  _cleanupForm: function() {
     this.set('tradeDate', null);
     this.set('openValue', null);
     this.set('closeValue', null);

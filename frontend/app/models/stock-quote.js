@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  tradeDate: DS.attr('date'),
+  tradeDate: DS.attr('utc'),
   openValue: DS.attr('number'),
   closeValue: DS.attr('number'),
   highValue: DS.attr('number'),
