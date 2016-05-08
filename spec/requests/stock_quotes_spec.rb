@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-# TODO: missing test for delete and update
+# TODO: Test proper validation and errors
 
 describe 'StockQuote API' do
 
@@ -29,6 +29,8 @@ describe 'StockQuote API' do
     )
   ]
   end
+
+  let(:stock_quote) {stock_quotes.first}
 
   let(:stock_quotes_json) {JSON.parse(ActiveModel::ArraySerializer.new(stock_quotes).to_json)}
 
@@ -65,8 +67,6 @@ describe 'StockQuote API' do
 
   describe "GET stock_quote" do
 
-    let(:stock_quote) {stock_quotes.first}
-
     it "returns ok response for existing records" do
       stock_quote.save!
       get "/api/v1/stock_quotes/#{stock_quote.id}"
@@ -87,9 +87,7 @@ describe 'StockQuote API' do
 
   end
 
-
   describe "POST stock_quotes" do
-    # TODO: Test proper validation and errors
 
     let (:stock_quote_params) do {
       "stock_quote" => {
@@ -113,6 +111,61 @@ describe 'StockQuote API' do
       new_record_hash = JSON.parse(StockQuoteSerializer.new(StockQuote.first).to_json)
       new_record_hash['stock_quote'].delete('id')
       expect(new_record_hash).to eq(stock_quote_params)
+    end
+  end
+
+  describe "DELETE stock_quotes" do
+    it "returns the appropriate status" do
+      stock_quote.save!
+      delete "/api/v1/stock_quotes/#{stock_quote.id}"
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "returns no_found response for non-existing records" do
+      delete "/api/v1/stock_quotes/23"
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "deletes the record in the DB" do
+      stock_quote.save!
+      id = stock_quote.id
+      delete "/api/v1/stock_quotes/#{id}"
+      expect(StockQuote.all).to be_empty
+    end
+  end
+
+  describe "PATCH stock_quotes" do
+
+    let (:update_params) do {
+      "stock_quote" => {
+        "id" => 1,
+        "open_value" => 13.0,
+        "volume" => 1111
+        }
+      }
+    end
+
+    it "returns the appropriate status" do
+      stock_quote.save!
+      patch "/api/v1/stock_quotes/1", update_params.to_json, json_headers
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "returns no_found response for non-existing records" do
+      patch "/api/v1/stock_quotes/1", update_params.to_json, json_headers
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "updates the record in the DB" do
+      stock_quote.save!
+      patch "/api/v1/stock_quotes/1", update_params.to_json, json_headers
+      updated_quote = StockQuote.first
+      expect(updated_quote.open_value).to eq(13.0)
+      expect(updated_quote.close_value).to eq(1.2)
+      expect(updated_quote.high_value).to eq(1.4)
+      expect(updated_quote.low_value).to eq(0.9)
+      expect(updated_quote.volume).to eq(1111)
+
     end
   end
 
