@@ -8,7 +8,6 @@ import BufferedProxy from 'ember-buffered-proxy/proxy';
  */
 export default Ember.Component.extend({
   tagName: 'tr',
-
   isEditing: false,
 
   didReceiveAttrs() {
@@ -34,6 +33,7 @@ export default Ember.Component.extend({
       this.bufferedModel.set('closeValue', parseFloat(this.bufferedModel.get('closeValue')));
       this.bufferedModel.set('highValue', parseFloat(this.bufferedModel.get('highValue')));
       this.bufferedModel.set('lowValue', parseFloat(this.bufferedModel.get('lowValue')));
+      this.bufferedModel.set('lowValue', parseInt(this.bufferedModel.get('volume')));
       this.bufferedModel.applyChanges();
       this.get('stockQuote').save();
     },

@@ -1,0 +1,40 @@
+{{#if isEditing}}
+  <td>{{bootstrap-datepicker value=tradeDate class="form-control"}}</td>
+  <td>{{input type="number" step="any" class="form-control" value=openValue}}</td>
+  <td>{{input type="number" step="any" class="form-control" value=closeValue}}</td>
+  <td>{{input type="number" step="any" class="form-control" value=highValue}}</td>
+  <td>{{input type="number" step="any" class="form-control" value=lowValue}}</td>
+  <td>{{input type="number" step="1"   class="form-control" value=volume}}</td>
+  <td>
+    <div class="row">
+      <div class="col-xs-2">
+        <button type="button" class="btn btn-success action-button" {{action "saveRecord"}}>
+          <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="col-xs-2">
+        <button type="button" class="btn btn-warning action-button" {{action "cancelEdit"}}>
+          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </td>
+{{else}}
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+    <div class="row">
+      <div class="col-xs-2 col-xs-offset-8">
+        <button type="button" class="btn btn-success action-button" {{action "newRecord"}}>
+          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </td>
+{{/if}}
+
+
