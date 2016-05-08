@@ -5,14 +5,29 @@ export default Ember.Controller.extend({
   /* Chart */
   chartMode: 'StockChart',
 
-  chartOptions: {
-    rangeSelector : {
-        selected : 1
-    },
-    title : {
-        text : 'YHOO Stock Price'
-    },
-  },
+  chartOptions: function() {
+    return {
+      rangeSelector: {
+        selected: 5
+      },
+      title: {
+        text: 'YHOO Stock Price'
+      },
+      xAxis: {
+        events: {
+          setExtremes: (e) => {
+            var range = {
+              fromDate: new Date(e.min),
+              toDate: new Date(e.max),
+            };
+            this.set('dateRangeFilter', range);
+          }
+        }
+      }
+    };
+  }.property(),
+
+  dateRangeFilter: null,
 
   chartData: function() {
     return this.series;
@@ -26,6 +41,7 @@ export default Ember.Controller.extend({
   ],
 
   buildChartData: function() {
+    console.log("1", this);
     var self = this;
     this.series = this.chartSeries.map(function(series) {
       var data = self.get('model').map(function(item) {
@@ -43,8 +59,17 @@ export default Ember.Controller.extend({
   }.observes("model"),
 
   tableData: function() {
-    return this.model;
-  }.property(),
+    if (!this.get('dateRangeFilter')) {
+      return this.model;
+    } else {
+      var from = this.get('dateRangeFilter').fromDate;
+      var to = this.get('dateRangeFilter').toDate;
+      return this.model.filter((stockQuote) => {
+        var quoteDate = stockQuote.get('tradeDate');
+        return (from <= quoteDate) && (quoteDate <= to);
+      });
+    }
+  }.property('dateRangeFilter'),
 
   tableColumns: [
     {
@@ -85,6 +110,7 @@ export default Ember.Controller.extend({
     // to have an observer on the boolean flag and let that trigger
     // the show/hide.
     showSeries: function(seriesIndex, event) {
+      console.log("2", this);
       var isVisible = event.target.checked;
       Ember.set(this.chartSeries[seriesIndex], 'visible', isVisible);
       // There must be a better way of doing this from the library itself
