@@ -12,7 +12,7 @@
         </div>
         <div class="row">
           <div class="col-xs-12">
-            {{high-charts mode=chartMode content=chartData chartOptions=chartOptions theme=theme}}
+            {{dynamic-high-charts mode=chartMode content=chartData chartOptions=chartOptions theme=theme}}
           </div>
         </div>
       </div>
@@ -20,33 +20,8 @@
   </div>
 </div>
 
-
 <div class="row">
   <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">YHOO</div>
-      <div class="panel-body">
-
-        <table class='table table-striped'>
-          <tr>
-            <th>Date</th>
-            <th>Open</th>
-            <th>Close</th>
-            <th>High</th>
-            <th>Low</th>
-          </tr>
-          {{#each tableData as |stockQuote|}}
-          <tr>
-            <td>{{stockQuote.tradeDate}}</td>
-            <td>{{stockQuote.openValue}}</td>
-            <td>{{stockQuote.closeValue}}</td>
-            <td>{{stockQuote.highValue}}</td>
-            <td>{{stockQuote.lowValue}}</td>
-          </tr>
-          {{/each}}
-        </table>
-
-      </div>
-    </div>
+    {{chart-data-table tableData=tableData}}
   </div>
 </div>
