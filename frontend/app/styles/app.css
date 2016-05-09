@@ -10,3 +10,7 @@
   min-width: 200px;
   width: 200px;
 }
+
+.stocks-table thead {
+  border-top: 2px solid #ddd;
+}

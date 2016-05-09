@@ -1,27 +1,28 @@
+<h3>Stock evolution</h3>
+
 <div class="row">
   <div class="col-xs-12">
     <div class="panel panel-default">
       <div class="panel-heading">YHOO stock price</div>
       <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-12">
-            {{#each chartSeries as |series index|}}
-              <input type="checkbox" checked={{series.visible}} onclick={{action "showSeries" index}} /> {{series.name}}
-            {{/each}}
-          </div>
+
+        <div class="well well-sm">
+          Series:
+          {{#each chartSeries as |series index|}}
+            <label class="checkbox-inline">
+              <input type="checkbox" checked={{series.visible}} onclick={{action "showSeries" index}} />
+              {{series.name}}
+            </label>
+          {{/each}}
         </div>
-        <div class="row">
-          <div class="col-xs-12">
-            {{dynamic-high-charts mode=chartMode content=chartData chartOptions=chartOptions theme=theme}}
-          </div>
-        </div>
+
+        {{dynamic-high-charts mode=chartMode content=chartData chartOptions=chartOptions theme=theme}}
+
       </div>
+
+      {{chart-data-table tableData=tableData}}
+
     </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    {{chart-data-table tableData=tableData}}
-  </div>
-</div>

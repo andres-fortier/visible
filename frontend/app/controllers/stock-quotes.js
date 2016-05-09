@@ -10,9 +10,6 @@ export default Ember.Controller.extend({
       rangeSelector: {
         selected: undefined
       },
-      title: {
-        text: 'YHOO Stock Price'
-      },
       xAxis: {
         events: {
           setExtremes: (e) => {
