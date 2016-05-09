@@ -18,7 +18,7 @@ module Api
         if @stock_quote.save
           render json: @stock_quote, status: :created, location: api_v1_stock_quote_url(@stock_quote)
         else
-          render json: @stock_quote.errors, status: :unprocessable_entity
+          render json: {errors: @stock_quote.errors}, status: :unprocessable_entity
         end
       end
 
@@ -26,7 +26,7 @@ module Api
         if @stock_quote.update(stock_quote_params)
           head :no_content
         else
-          render json: @stock_quote.errors, status: :unprocessable_entity
+          render json: {errors: @stock_quote.errors}, status: :unprocessable_entity
         end
       end
 

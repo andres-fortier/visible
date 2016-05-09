@@ -10,6 +10,8 @@ export default Ember.Component.extend({
 
   isEditing: false,
 
+  errors: [],
+
   actions: {
 
     newRecord() {
@@ -19,7 +21,6 @@ export default Ember.Component.extend({
     // Unfortunately there is no handy way of getting the numbers as actual numbers
     // (see https://github.com/emberjs/ember.js/issues/11209).
     saveRecord() {
-      this.toggleProperty('isEditing');
       const newStockQuote = this.get('store').createRecord('stockQuote', {
         tradeDate: this.get('tradeDate'),
         openValue: parseFloat(this.get('openValue')),
@@ -28,8 +29,12 @@ export default Ember.Component.extend({
         lowValue: parseFloat(this.get('lowValue')),
         volume: parseInt(this.get('volume'))
       });
-      newStockQuote.save();
-      this._cleanupForm();
+      newStockQuote.save().then(() => {
+        this.toggleProperty('isEditing');
+        this._cleanupForm();
+      }, () => {
+        this.set('errors', newStockQuote.get('errors'));
+      });
     },
 
     cancelEdit() {

@@ -1,6 +1,9 @@
 {{#if isEditing}}
   <td>{{bootstrap-datepicker value=tradeDate class="form-control"}}</td>
-  <td>{{input type="number" step="any" class="form-control" value=openValue}}</td>
+  <td>
+    {{input type="number" step="any" class="form-control" value=openValue}}
+    {{inline-validation-error errors=errors.openValue}}
+  </td>
   <td>{{input type="number" step="any" class="form-control" value=closeValue}}</td>
   <td>{{input type="number" step="any" class="form-control" value=highValue}}</td>
   <td>{{input type="number" step="any" class="form-control" value=lowValue}}</td>

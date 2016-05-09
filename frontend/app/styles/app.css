@@ -14,3 +14,8 @@
 .stocks-table thead {
   border-top: 2px solid #ddd;
 }
+
+.inline-alert {
+  margin-bottom: 0px;
+  padding: 0 0 0 5px;
+}

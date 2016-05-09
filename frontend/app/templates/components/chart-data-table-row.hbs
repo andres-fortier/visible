@@ -1,12 +1,27 @@
 {{#if isEditing}}
-  <td>{{bootstrap-datepicker value=bufferedModel.tradeDate class="form-control"}}</td>
-
-
-  <td>{{input type="number" step="any" class="form-control" value=bufferedModel.openValue}}</td>
-  <td>{{input type="number" step="any" class="form-control" value=bufferedModel.closeValue}}</td>
-  <td>{{input type="number" step="any" class="form-control" value=bufferedModel.highValue}}</td>
-  <td>{{input type="number" step="any" class="form-control" value=bufferedModel.lowValue}}</td>
-  <td>{{input type="number" step="1"   class="form-control" value=bufferedModel.volume}}</td>
+  <td>
+    {{bootstrap-datepicker value=bufferedModel.tradeDate class="form-control"}}
+  </td>
+  <td>
+    {{input type="number" step="any" class="form-control" value=bufferedModel.openValue}}
+    {{inline-validation-error errors=stockQuote.errors.openValue}}
+  </td>
+  <td>
+    {{input type="number" step="any" class="form-control" value=bufferedModel.closeValue}}
+    {{inline-validation-error errors=stockQuote.errors.closeValue}}
+  </td>
+  <td>
+    {{input type="number" step="any" class="form-control" value=bufferedModel.highValue}}
+    {{inline-validation-error errors=stockQuote.errors.highValue}}
+  </td>
+  <td>
+    {{input type="number" step="any" class="form-control" value=bufferedModel.lowValue}}
+    {{inline-validation-error errors=stockQuote.errors.lowValue}}
+  </td>
+  <td>
+    {{input type="number" step="1"   class="form-control" value=bufferedModel.volume}}
+    {{inline-validation-error errors=stockQuote.errors.volume}}
+  </td>
   <td>
     <div class="row">
       <div class="col-xs-2">

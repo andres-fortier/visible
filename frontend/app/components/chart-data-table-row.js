@@ -28,14 +28,15 @@ export default Ember.Component.extend({
     // TODO: use a similar approach to the one used in BufferedProxy or extend it
     // to perform the transformation.
     saveRecord() {
-      this.toggleProperty('isEditing');
       this.bufferedModel.set('openValue', parseFloat(this.bufferedModel.get('openValue')));
       this.bufferedModel.set('closeValue', parseFloat(this.bufferedModel.get('closeValue')));
       this.bufferedModel.set('highValue', parseFloat(this.bufferedModel.get('highValue')));
       this.bufferedModel.set('lowValue', parseFloat(this.bufferedModel.get('lowValue')));
       this.bufferedModel.set('lowValue', parseInt(this.bufferedModel.get('volume')));
       this.bufferedModel.applyChanges();
-      this.get('stockQuote').save();
+      this.get('stockQuote').save().then(() => {
+        this.toggleProperty('isEditing');
+      }, () => {});
     },
 
     cancelEdit() {
