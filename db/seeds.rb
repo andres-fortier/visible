@@ -334,14 +334,17 @@ yahoo = [
   [DateTime.parse('2015-01-05'), 49.709999, 49.130001, 49.880001, 48.91, 14389300],
   [DateTime.parse('2015-01-02'), 50.66, 50.169998, 50.779999, 49.470001, 11924500]
 ]
-yahoo.each do |record|
-  p record[0]
-  StockQuote.create!({
-    trade_date: record[0],
-    open_value: record[1],
-    close_value: record[2],
-    high_value: record[3],
-    low_value: record[4],
-    volume: record[5]
-  });
+print 'Seeding db...'
+StockQuote.transaction do
+  yahoo.each do |record|
+    print '.'
+    StockQuote.create!({
+      trade_date: record[0],
+      open_value: record[1],
+      close_value: record[2],
+      high_value: record[3],
+      low_value: record[4],
+      volume: record[5]
+    });
+  end
 end
