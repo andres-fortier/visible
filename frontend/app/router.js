@@ -7,11 +7,6 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('stockQuotes', {path: '/'});
-  /*
-  this.route('stockQuotes');
-  this.route('stockQuote.new', { path: 'stockQuote/new' });
-  this.resource('stockQuote', { path: 'stockQuote/:stockQuoteId' });
-  */
 });
 
 export default Router;
